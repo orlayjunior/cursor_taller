@@ -1,0 +1,29 @@
+DELIMITER $$
+CREATE PROCEDURE c_estado (in nid int(11))
+BEGIN
+
+  DECLARE listo boolean DEFAULT false;
+  DECLARE v_id int;
+  DECLARE v_estado VARCHAR(120);  
+  
+DECLARE c_universidad CURSOR for SELECT id, estado 
+                                FROM usuario;
+DECLARE CONTINUE HANDLER for SQLSTATE '02000' SET listo = true;
+OPEN c_universidad;
+c_universidadLoop:LOOP
+FETCH c_universidad INTO v_id, v_estado;
+  if listo THEN LEAVE c_universidadLoop;
+  END if;
+  UPDATE usuario set estado = 'inactivo' WHERE id = v_id and id =nid;
+END Loop c_universidadLoop;
+CLOSE c_universidad;
+END$$
+DELIMITER ;
+
+
+
+
+
+
+
+CALL c_estado(1);
